@@ -1,0 +1,48 @@
+<div class="row">
+  <div class="col-md-3">
+    <ul class="sidebar-list">
+      <li class="sidebar-item"><%= link_to "Your Listings", rooms_path, class: "sidebar-link" %></li>
+      <li class="sidebar-item"><%= link_to "Your Tenants", your_rentals_path, class: "sidebar-link active" %></li>
+      <li class="sidebar-item"><%= link_to "Your Landowners", your_landowners_path, class: "sidebar-link" %></li>
+    </ul>
+  </div>
+  <div class="col-md-9">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Your Tenants
+      </div>
+      <div class="panel-body">
+
+        <% @rooms.each do |room| %>
+            <% room.rentals.each do |rental| %>
+                <div class="row">
+                  <div class="col-md-2">
+                    <%= rental.start_date.strftime('%v') %>
+                  </div>
+                  <div class="col-md-2">
+                    <%= link_to room_path(rental.room) do %>
+                        <%= image_tag rental.room.cover_photo(:thumb) %>
+                    <% end %>
+                  </div>
+                  <div class="col-md-5">
+                    <%= link_to rental.room.listing_name, room_path(rental.room) %><br/><br/>
+                    <span>
+                      <%= link_to user_path(rental.user) do %>
+                        <%= image_tag avatar_url(rental.user), class: "img-circle avatar-small" %>
+                        <%= rental.user.fullname %>
+                      <% end %>
+                    </span>
+                  </div>
+                  <div class="col-md-3 text-right">
+                    <%= render partial: "reviews/landowner_form", locals: {rental: rental}%>
+                  </div>
+                </div>
+                <hr/>
+
+            <% end %>
+        <% end %>
+
+      </div>
+    </div>
+  </div>
+</div>

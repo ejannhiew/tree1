@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Tree.Rent</title>
+    <%= csrf_meta_tags %>
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD5vxfQd8o-B1gKIcJ0T8s8L4oVYzsb56c&libraries=places"></script>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <link href="https://fonts.googleapis.com/css?family=Signika" rel="stylesheet">
+    <link rel="stylesheet" href=
+    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/ui-lightness/jquery-ui.css">
+    <%= favicon_link_tag 'treeFavicon.png'%>
+
+  </head>
+
+  <body>
+
+    <%= render 'shared/navbar' %>
+    <%= render 'shared/message' %>
+
+    <div class="container">
+      <%= yield %>
+    </div>
+
+  </body>
+</html>

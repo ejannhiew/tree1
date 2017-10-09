@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  comment: MyText
+  star: 1
+  room: one
+  rental: one
+  tenant: one
+  landowner: one
+  type: 
+
+two:
+  comment: MyText
+  star: 1
+  room: two
+  rental: two
+  tenant: two
+  landowner: two
+  type: 

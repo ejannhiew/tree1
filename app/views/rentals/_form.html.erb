@@ -1,0 +1,108 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <span><i class= "fa fa-bolt" style = "color: #ECDD38"></i> RM <%= @room.price %> </span>
+    <span class="pull-right">Per Month</span>
+  </div>
+
+  <div class="panel-body">
+    <%= form_for([@room, @room.rentals.new]) do |f| %>
+    <div class="row text-center">
+      <div class="col-md-12">
+        <label>Move In</label>
+          <%= f.text_field :start_date, readonly: true, placeholder: "Move Day", class: "form-control datepicker" %>
+      </div>
+    </div>
+    <br/>
+    <div class="row text-center">
+      <div class="col-md-12 form-group">
+        <label>Rent Period</label>
+          <%= f.number_field :rent_period , min: 3, max: 24, placeholder: "Minimum 3 Months", class: "form-control text-center spinner", required: true %>
+      </div>
+    </div>
+    <h4><span id= "message"></span></h4>
+    <div id="preview" style="display :none">
+        <table class="reservation-table">
+          <tbody>
+            <tr>
+              <td>Security Deposit</td>
+              <td class="text-right">RM<%= @room.price %></td>
+            </tr>
+            <tr>
+              <td>Months</td>
+              <td class="text-right">x <span id="rent_period"></span></td>
+            </tr>
+            <tr>
+              <td class="total">Total Upon Moving In</td>
+              <td class="text-right">RM<span id="rental_total"></span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <br/>
+      <%= f.submit "Book Now", id: "btn-book",class: "btn btn-normal btn-block" %>
+    <% end %>
+  </div>
+
+
+
+  </div>
+</div>
+
+
+<script>
+
+  function checkDate(date) {
+    dmy = date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear();
+    return [$.inArray(dmy, unavailableDates) == -1];
+  }
+
+  $(function(){
+    unavailableDates = [];
+
+    $.ajax({
+      url: '<%= preload_room_path(@room) %>',
+      dateTyp: 'json',
+      success: function(data) {
+
+        $.each(data, function(arrID, arrValue) {
+            for(var d = new Date(arrValue.start_date); d <= new Date(arrValue.end_date); d.setDate(d.getDate() + 1)) {
+              unavailableDates.push($.datepicker.formatDate('d-m-yy', d));
+            }
+          });
+        $.each(data, function(arrID, arrValue) {
+            for(var d = Date.today; d <= new Date(arrValue.start_date); d.setDate(d.getDate() + 1)) {
+              unavailableDates.push($.datepicker.formatDate('d-m-yy', d));
+              }
+            });
+
+          $('#rental_start_date').datepicker({
+            dateFormat: 'dd-M-yy',
+            minDate: 0,
+            maxDate: '6m',
+            beforeShowDay: checkDate,
+          });
+
+          $('#rent_period').spinner({
+            numberFormat: "n"
+          });
+
+        var start_date = $('#rental_start_date').datepicker('getDate');
+        var end_date = start_date + ($('#rent_period').spinner('value')).months;
+
+        var input = {
+          'start_date' : start_date,
+          'end_date' : end_date
+        }
+
+        $.ajax({
+          url: '<%= preview_room_path(@room) %>',
+          data: input,
+          success: function(data){
+
+          }
+        });
+    }
+    });
+  });
+</script>
